@@ -181,6 +181,7 @@ export default function DepartmentGallery() {
       </div>
 
       {/* Preview Modal */}
+      {/* Preview Modal */}
       {preview && (
         <div className="fixed inset-0 z-60 flex items-center justify-center p-6">
           {/* background overlay */}
@@ -190,9 +191,10 @@ export default function DepartmentGallery() {
           />
 
           {/* modal content */}
-          <div className="relative w-full max-w-6xl bg-white rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative w-full max-w-6xl bg-white rounded-2xl shadow-2xl flex flex-col h-[70vh] overflow-hidden">
+
             {/* header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b">
+            <div className="flex items-center justify-between px-4 py-2 border-b shrink-0">
               <div>
                 <div className="text-lg font-semibold">{preview.title}</div>
                 <div className="text-xs text-slate-500">
@@ -201,101 +203,48 @@ export default function DepartmentGallery() {
               </div>
 
               <div className="flex items-center gap-3">
-                {/* Open datasets in new tab */}
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}/xceed/#/data-manager?dept=${encodeURIComponent(preview.dept)}&dash=${encodeURIComponent(preview.id)}`;
-                    window.open(url, "_blank", "noopener,noreferrer,width=1600,height=900");
-                  }}
-                  className="px-3 py-2 rounded-md border text-sm hover:bg-slate-50"
-                >
-                  Open datasets
-                </button>
+                {preview.embedUrl && (
+                  <button
+                    className="px-3 py-2 rounded-md border text-sm hover:bg-slate-50"
+                    onClick={() =>
+                      window.open(
+                        preview.embedUrl,
+                        "_blank",
+                        "noopener,noreferrer,width=1600,height=900"
+                      )
+                    }
+                  >
+                    Open in Power BI
+                  </button>
 
-
-                {/* Close button */}
-                <button
-                  onClick={() => setPreview(null)}
-                  className="px-3 py-2 rounded-md border text-sm"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3">
-              {/* left: dashboard preview */}
-              <div className="lg:col-span-2 p-4">
-                {preview.embedUrl ? (
-                  <iframe
-                    title={preview.title}
-                    src={preview.embedUrl}
-                    style={{ width: "100%", height: "65vh", border: 0 }}
-                  />
-                ) : (
-                  <div className="p-6 text-slate-600">
-                    No embed URL configured for this dashboard. Add it via the Data Manager.
-                  </div>
                 )}
+
+
               </div>
-
-              {/* right: dataset list */}
-              <aside className="p-4 border-l">
-                <div className="text-sm font-semibold">Files</div>
-                <div className="mt-3 space-y-2">
-                  {(preview.raw?.dataset?.files || []).length === 0 ? (
-                    <div className="text-sm text-slate-500">No files found</div>
-                  ) : (
-                    (preview.raw.dataset.files || []).map((f) => (
-                      <div key={f.id} className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm font-medium truncate">{f.name}</div>
-                          <div className="text-xs text-slate-400 truncate">{f.type}</div>
-                        </div>
-                        <div className="ml-2">
-                          <a
-                            href={f.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs px-2 py-1 rounded-md border"
-                          >
-                            Open
-                          </a>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="mt-6">
-                  <div className="text-xs text-slate-400">Actions</div>
-                  <div className="mt-3 flex flex-col gap-2">
-                    {preview.embedUrl ? (
-                      <button
-                        className="px-3 py-2 rounded-md border text-sm text-center hover:bg-slate-50"
-                        onClick={() =>
-                          window.open(
-                            preview.embedUrl,
-                            "_blank",
-                            "noopener,noreferrer,width=1600,height=900"
-                          )
-                        }
-                      >
-                        Open in Power BI
-                      </button>
-                    ) : (
-                      <div className="px-3 py-2 rounded-md border text-sm text-center text-slate-400 cursor-not-allowed">
-                        No Power BI link
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </aside>
             </div>
+
+            {/* preview */}
+            <div className="flex-1 pt-4 px-1 overflow-hidden">
+
+              {preview.embedUrl ? (
+                <iframe
+                  title={preview.title}
+                  src={preview.embedUrl}
+                  className="w-full h-full border-0 rounded-md"
+                />
+
+              ) : (
+                <div className="p-6 text-slate-600">
+                  No embed URL configured for this dashboard.
+                </div>
+              )}
+
+            </div>
+
           </div>
         </div>
       )}
+
     </div>
   );
 }
